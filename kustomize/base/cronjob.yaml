@@ -1,0 +1,26 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dmkt-schedule
+spec:
+  concurrencyPolicy: Forbid
+  schedule: 0 * * * *
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: dmkt-schedule
+          restartPolicy: OnFailure
+          containers:
+          - name: scheduler
+            image: dmkt-schedule
+            env:
+            - name: GCS_BUCKET
+              value: example-bucket
+            - name: GCS_PATH
+              value: path/to/schdule.ics
+            resources:
+              requests:
+                cpu: 50m
+                memory: 52Mi
