@@ -183,6 +183,7 @@ func main() {
 	}
 	w := gcs.Bucket(gcsBkt).Object(gcsPath).NewWriter(ctx)
 	w.ObjectAttrs.ContentType = "text/calendar"
+	w.ObjectAttrs.CacheControl = "no-cache, max-age=600"
 	defer w.Close()
 
 	// render template
