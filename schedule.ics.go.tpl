@@ -13,6 +13,7 @@ END:VTIMEZONE
 BEGIN:VEVENT
 UID:{{ .Uid }}@neigepluie.net
 SUMMARY:{{ .Summary }}
+DESCRIPTION:https://aikatsu-academy.com/schedule/
 TRANSP:OPAQUE
 {{- if .IsAllDay }}
 DTSTART;TZID=Asia/Tokyo;VALUE=DATE:{{ .StartDate }}
