@@ -103,8 +103,9 @@ func main() {
 	slog.Info("dump", "node", sh)
 
 	// regexp for streaming event
+	// starting time mark expects "FULLWIDTH TILDE", "WAVE DASH" and hyphen
 	// delimiter may be half space " " or full space "　" (in Japanese)
-	reForSe := regexp.MustCompile(`(\d+):(\d+)〜[ \x{3000}]?(.*)`)
+	reForEvt := regexp.MustCompile(`(\d+):(\d+)[～〜-]?[ \x{3000}]*(.*)`)
 
 	mos := findMonth(sh)
 	slog.Info("dump", "months", mos)
@@ -126,7 +127,7 @@ func main() {
 				isAllDay := true
 				title := e
 
-				r := reForSe.FindStringSubmatch(e)
+				r := reForEvt.FindStringSubmatch(e)
 				if r != nil {
 					title = r[3]
 
