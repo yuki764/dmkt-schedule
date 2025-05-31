@@ -130,6 +130,8 @@ func main() {
 				r := reForEvt.FindStringSubmatch(e)
 				if r != nil {
 					title = r[3]
+					title = strings.Replace(title, "個人配信]", "]", 1)
+					title = strings.ReplaceAll(title, "　", " ")
 
 					h, err = time.ParseDuration(r[1] + "h")
 					if err != nil {
