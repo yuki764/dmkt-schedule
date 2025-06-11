@@ -1,0 +1,26 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dmkt-schedule
+spec:
+  concurrencyPolicy: Forbid
+  schedule: {{ .Values.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: dmkt-schedule
+          restartPolicy: OnFailure
+          containers:
+            - name: scheduler
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              env:
+                - name: GCS_BUCKET
+                  value: {{ .Values.ical.gcs.bucket }}
+                - name: GCS_PATH
+                  value: {{ .Values.ical.gcs.path }}
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 52Mi

@@ -1,0 +1,12 @@
+---
+image:
+  repository: localhost/dmkt-schedule
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+schedule: "0 * * * *"
+
+ical:
+  gcs:
+    bucket: example-bucket
+    path: path/to/schedule.ics
