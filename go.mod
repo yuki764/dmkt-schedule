@@ -1,4 +1,4 @@
-module neigepluie.net/dmkt-schedule-ics
+module go.neigepluie.net/dmkt-schedule
 
 go 1.24.0
 
