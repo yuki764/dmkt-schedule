@@ -105,7 +105,7 @@ func main() {
 	// regexp for streaming event
 	// starting time mark expects "FULLWIDTH TILDE", "WAVE DASH" and hyphen
 	// delimiter may be half space " " or full space "　" (in Japanese)
-	reForEvt := regexp.MustCompile(`(\d+):(\d+)[～〜-]?[ \x{3000}]*(.*)`)
+	reForEvt := regexp.MustCompile(`^(\d+):(\d+)[～〜-]?[ \x{3000}]*(.*)`)
 
 	mos := findMonth(sh)
 	slog.Info("dump", "months", mos)
@@ -125,15 +125,11 @@ func main() {
 				h := 0 * time.Hour
 				m := 0 * time.Minute
 				isAllDay := true
-				title := e
+				title := ""
 
 				r := reForEvt.FindStringSubmatch(e)
 				if r != nil {
-					title = r[3]
-					title = strings.Replace(title, "[アイカツアカデミー！", "[", 1)
-					title = strings.Replace(title, "個人配信]", "]", 1)
-					title = strings.Replace(title, "個人ch]", "]", 1)
-					title = strings.ReplaceAll(title, "　", " ")
+					title = shortenTitle(r[3])
 
 					h, err = time.ParseDuration(r[1] + "h")
 					if err != nil {
@@ -145,6 +141,8 @@ func main() {
 					}
 					isAllDay = false
 				} else {
+					title = shortenTitle(e)
+
 					if strings.Contains(e, "「アイカツアカデミー！配信部」デミカツ通信") {
 						h = 20 * time.Hour
 						isAllDay = false
@@ -203,6 +201,15 @@ func main() {
 	}
 
 	slog.Info("succeeded!")
+}
+
+func shortenTitle(title string) string {
+	t := strings.Replace(title, "[アイカツアカデミー！", "[", 1)
+	t = strings.Replace(t, "個人配信]", "]", 1)
+	t = strings.Replace(t, "個人ch]", "]", 1)
+	t = strings.ReplaceAll(t, "　", " ")
+
+	return t
 }
 
 func findScheduleElement(n *html.Node, class string) *html.Node {
